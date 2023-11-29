@@ -1,0 +1,172 @@
+CREATE TABLE CUSTOMER (
+  Fname VARCHAR(255),
+  Mname VARCHAR(255),
+  Lname VARCHAR(255),
+  Phone_No CHAR(10) PRIMARY KEY,
+  Business_provided_till_now INTEGER,
+  Birthday DATE,
+  Table_Number INTEGER
+);
+
+
+CREATE TABLE CHEF (
+  Chef_ID CHAR(6) PRIMARY KEY,
+  Fname VARCHAR(255),
+  Mname VARCHAR(255),
+  Lname VARCHAR(255),
+  Date_of_join DATE,
+  Rating INTEGER,
+  Salary INTEGER
+);
+
+
+CREATE TABLE CHEF_SPECIALISATION (
+  Chef_ID CHAR(6),
+  Dish_name VARCHAR(255),
+  PRIMARY KEY (Chef_ID, Dish_name)
+);
+
+CREATE TABLE CHEF_SHIFT (
+  Chef_ID CHAR(6) PRIMARY KEY,
+  Shift_Start_time TIME,
+  Shift_end_time TIME
+);
+
+CREATE TABLE WAITER (
+  Fname VARCHAR(255),
+  Mname VARCHAR(255),
+  Lname VARCHAR(255),
+  Waiter_ID CHAR(6) PRIMARY KEY,
+  Date_of_join DATE,
+  Rating INTEGER,
+  Number_of_tables_served_this_month INTEGER,
+  Salary INTEGER,
+  Mentor_ID CHAR(6)
+);
+
+
+CREATE TABLE WAITER_SHIFT (
+  Waiter_ID CHAR(6) PRIMARY KEY,
+  Shift_Start_time TIME,
+  Shift_end_time TIME
+);
+
+
+#NAME CHANGED FROM TABLE TO TABLE_INFO
+CREATE TABLE TABLE_INFO (
+  Table_Number INTEGER PRIMARY KEY,
+  Section_Type ENUM('Private Room', 'Dining', 'Terrace'),
+  Seating_Capacity INTEGER,
+  Status ENUM('To be cleaned', 'Waiting to be Served', 'Waiting to Order', 'Ready for Seating')
+);
+
+
+CREATE TABLE DISH (
+  Name VARCHAR(255) PRIMARY KEY,
+  Category ENUM ('Veg', 'Non-veg', 'Vegan'),
+  Cuisine ENUM ('Indian', 'Italian', 'Chinese'),
+  Description VARCHAR(255),
+  Price INTEGER
+);
+
+CREATE Table DISH_REQUIREMENT {
+  Dish_Name varchar [primary key]
+  Ingredient varchar [primary key]
+}
+
+Table INGREDIENT {
+  Name varchar [primary key]
+  Quantity_in_hand integer
+  Supplier_ID char(6)
+}
+
+#NAME CHANGED FROM ORDER TO ORDER_INFO
+CREATE TABLE ORDER_INFO (
+  Order_Number INTEGER,
+  Date DATE,
+  Time TIME,
+  Total_price INTEGER,
+  Customer_Phone_No CHAR(10),
+  Rating INTEGER,
+  Comment VARCHAR(255),
+  PRIMARY KEY (Order_Number, Customer_Phone_No)
+);
+
+CREATE TABLE ORDER_DISHES (
+  Order_Number INTEGER,
+  Date TIME,
+  Customer_Phone_No CHAR(10),
+  Dish_name VARCHAR(255),
+  PRIMARY KEY (Order_Number, Date, Customer_Phone_No, Dish_name)
+);
+
+
+CREATE TABLE SUPPLIER (
+  Supplier_ID CHAR(6) PRIMARY KEY,
+  Fname VARCHAR(255),
+  Mname VARCHAR(255),
+  Lname VARCHAR(255),
+  House_No VARCHAR(255),
+  Street VARCHAR(255),
+  Pincode INTEGER,
+  Phone_No CHAR(10),
+  Transaction_Amount INTEGER
+);
+
+CREATE TABLE SUPPLIER_PIN (
+  Supplier_ID CHAR(6) PRIMARY KEY,
+  Pincode CHAR(6),
+  City VARCHAR(255)
+);
+
+
+CREATE TABLE COMBO (
+  Name VARCHAR(255),
+  Dish_Name VARCHAR(255),
+  Price INTEGER,
+  Availability BOOLEAN,
+  PRIMARY KEY (Name, Dish_Name)
+);
+
+CREATE TABLE COMBO_TYPE (
+  Name VARCHAR(255),
+  Dish_Name VARCHAR(255),
+  Type VARCHAR(255),
+  PRIMARY KEY (Name, Dish_Name)
+);
+
+
+CREATE TABLE GIVES (
+  Phone_No CHAR(10),
+  Order_Number INTEGER,
+  Date DATE,
+  Waiter_ID CHAR(6),
+  PRIMARY KEY (Phone_No, Order_Number, Date, Waiter_ID)
+);
+
+
+CREATE TABLE BRINGS (
+  Waiter_ID CHAR(6),
+  Order_Number INTEGER,
+  Customer_Phone_No CHAR(10),
+  Date DATE,
+  Chef_ID CHAR(6),
+  Table_Number INTEGER,
+  PRIMARY KEY (Waiter_ID, Order_Number, Customer_Phone_No, Date, Chef_ID, Table_Number)
+);
+
+
+ALTER TABLE ORDER_DISHES
+MODIFY COLUMN Date DATE;
+
+ALTER TABLE TABLE_INFO
+MODIFY COLUMN Status ENUM('Occupied', 'Not occupied') DEFAULT 'Not occupied';
+
+ALTER TABLE COMBO_TYPE
+MODIFY COLUMN Type ENUM('Lunch Combo', 'Dinner Combo', 'Weekend Special');
+
+ALTER TABLE ORDER_INFO DROP PRIMARY KEY;
+
+ALTER TABLE ORDER_INFO ADD PRIMARY KEY(Customer_Phone_No, Order_Number,Date);
+
+ALTER TABLE GIVES ADD CONSTRAINT fk_gives_orderinfo1 FOREIGN KEY(Phone_no, Order_Number,Date) REFERENCES ORDER_INFO(Customer_Phone_No, Order_Number,Date);
