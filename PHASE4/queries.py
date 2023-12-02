@@ -873,24 +873,22 @@ def FireWaiter():
         print(">>>>>>>>>>>>",e)
     return
 
-def removeOrder():
+def removeDish():
     try:
         row = {}
-        row["Order_Number"] = input("Order Number: ")
-        row["Date"] = input("Date: ")
-        row["Customer_Phone_No"] = input("Customer Phone Number: ")
+        row["Name"] = input("Dish Name: ")
 
-        query = "DELETE FROM ORDER_INFO WHERE Order_Number='%s' AND Date='%s' AND Customer_Phone_No='%s'" % (row["Order_Number"],row["Date"],row["Customer_Phone_No"])
+        query = "DELETE FROM DISH WHERE Name='%s'" % (row["Name"])
 
         print(query)
         cur.execute(query)
         con.commit()
 
-        print("Order Removed Successfully")
+        print("Dish Removed Successfully")
 
     except Exception as e:
         con.rollback()
-        print("Failed to delete Order from database")
+        print("Failed to Dish from database")
         print(">>>>>>>>>>>>",e)
     return
 
@@ -1003,7 +1001,7 @@ def dispatch(ch):
     elif(ch==31):
         FireWaiter()
     elif(ch==32):
-        removeOrder()
+        removeDish()
     elif(ch==33):
         removeSupplier()
     else:
@@ -1023,9 +1021,9 @@ while(1):
         # Set host to the server's address if you don't want to use local SQL server
         con = pymysql.connect(host='localhost',
                               port=3306,
-                              user="root",
-                              password="0512",
-                              db='restaurant_database',
+                              user='jayesh',
+                              password='192837',
+                              db='Restaurant_DBMS',
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
 
@@ -1089,6 +1087,14 @@ while(1):
                     "28. Change salary of a waiter")
                 print(
                     "29. Change salary of a chef")
+                print(
+                    "30. Remove customer from database")
+                print(
+                    "31. Remove waiter from database")
+                print(
+                    "32. Remove dish from database")
+                print(
+                    "33. Remove supplier from database")
                 print("35. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
