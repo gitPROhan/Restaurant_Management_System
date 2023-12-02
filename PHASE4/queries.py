@@ -454,7 +454,7 @@ def getTotalSalaryOfChefs():
         con.commit()
         output=cur.fetchall()
         for x in output:
-            print(f"Total salary sum: {x['TOTAL']}")
+            print(f"\nTotal salary sum: {x['TOTAL']}\n")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
@@ -488,7 +488,7 @@ def maxTotalPrice():
         con.commit()
         output = cur.fetchall()
         for x in output:
-            print(f"Max total price of an order: {x['MAXIMUM']}")
+            print(f"\nMax total price of an order: {x['MAXIMUM']}\n")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
@@ -506,7 +506,7 @@ def getDishByKeyword():
         con.commit()
         output = cur.fetchall()
         for x in output:
-            print(f"Name: {x['Name']}  Description:{x['Description']}")
+            print(f"\nName: {x['Name']}  Description:{x['Description']}\n")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
@@ -535,7 +535,7 @@ def giveTop5dishes_ac_to_feedback():
         con.commit()
         output = cur.fetchall()
         for x in output:
-            print(f"Dish Name :{x['Dish_name']}  Average Rating: {x['AVERAGE_RATING']}")
+            print(f"\nDish Name :{x['Dish_name']}  Average Rating: {x['AVERAGE_RATING']}\n")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
@@ -873,24 +873,24 @@ def FireWaiter():
         print(">>>>>>>>>>>>",e)
     return
 
-# def removeDish():
-#     try:
-#         row = {}
-#         row["Name"] = input("Dish Name: ")
+def removeDish():
+    try:
+        row = {}
+        row["Name"] = input("Dish Name: ")
 
-#         query = "DELETE FROM DISH WHERE Name='%s'" % (row["Name"])
+        query = "DELETE FROM DISH WHERE Name='%s'" % (row["Name"])
 
-#         print(query)
-#         cur.execute(query)
-#         con.commit()
+        print(query)
+        cur.execute(query)
+        con.commit()
 
-#         print("Dish Removed Successfully")
+        print("Dish Removed Successfully")
 
-#     except Exception as e:
-#         con.rollback()
-#         print("Failed to Dish from database")
-#         print(">>>>>>>>>>>>",e)
-#     return
+    except Exception as e:
+        con.rollback()
+        print("Failed to Dish from database")
+        print(">>>>>>>>>>>>",e)
+    return
 
 def removeSupplier():
     try:
@@ -918,12 +918,34 @@ def checkWhoGaveOrderByDate():
         row={}
         row["pn"]=input("Give phone number of customer:")
         row["dt"]=input("Give date for which you wanna check:")
-        query="SELECT WAITER.Fname as wf , WAITER.Mname as wm ,WAITER.Lname as wl, CHEF.Fname as cf , CHEF.Mname as cm , CHEF.Lname as cl FROM ((BRINGS INNER JOIN WAITER ON BRINGS.Waiter_ID=WAITER.Waiter_ID) INNER JOIN CHEF ON BRINGS.Chef_ID=CHEF.Chef_ID) WHERE BRINGS.Customer_Phone_No='"+row["pn"]+"' AND BRINGS.Date='"+row["dt"]+"'"
+        query="SELECT WAITER.Fname as wf , WAITER.Mname as wm ,WAITER.Lname as wl,WAITER.Waiter_ID as wid, CHEF.Fname as cf , CHEF.Mname as cm , CHEF.Lname as cl, CHEF.Chef_ID as cid FROM ((BRINGS INNER JOIN WAITER ON BRINGS.Waiter_ID=WAITER.Waiter_ID) INNER JOIN CHEF ON BRINGS.Chef_ID=CHEF.Chef_ID) WHERE BRINGS.Customer_Phone_No='"+row["pn"]+"' AND BRINGS.Date='"+row["dt"]+"'"
         cur.execute(query)
         con.commit()
         output=cur.fetchall()
         for x in output:
-            print(f"Waiter named: {x['wf']} {x['wm']} {x['wl']}  brought order from chef named: {x['cf']} {x['cm']} {x['cl']}")
+            print(f"\nWaiter named: {x['wf']} {x['wm']} {x['wl']} Waiter ID:{x['wid']}  brought order from chef named: {x['cf']} {x['cm']} {x['cl']}  Chef ID:{x['cid']}\n")
+    except Exception as e:
+        con.rollback()
+        print("Failed to retrieve from database")
+        print(">>>>>>>>>>>>>", e)
+    return
+
+def changePriceOfDish():
+    try:
+        row={}
+        row["nm"]=input("Give name of dish whose price you want to change:")
+        row["new"]=int(input("Give new price of dish:"))
+        query0="SELECT Name FROM DISH WHERE DISH.Name='"+row["nm"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The table with table no {row['Table_num']} doesn't exist in database")
+            return
+        query="UPDATE DISH SET PRICE='"+str(row["new"])+"' WHERE Name='"+row["nm"]+"'"
+        cur.execute(query)
+        con.commit()
+        print("Price changed")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
@@ -989,7 +1011,7 @@ def dispatch(ch):
     elif(ch==18):
         getCustomerByLastName()
     elif(ch==19):
-        giveTop5dishes_at_feedback()
+        giveTop5dishes_ac_to_feedback()
     elif(ch==20):
         giveTotalRevenue_month()
     elif(ch==21):
@@ -1016,6 +1038,10 @@ def dispatch(ch):
         removeSupplier()
     elif(ch==32):
         checkDishWithKeywordInName()
+    elif(ch==33):
+        removeDish()
+    elif(ch==34):
+        changePriceOfDish()
     else:
         print("Error: Invalid Option")
 
@@ -1105,6 +1131,10 @@ while(1):
                     "31. Remove supplier from database")
                 print(
                     "32. Give dishes with keyword in name")
+                print(
+                    "33. Delete dish by name")
+                print(
+                    "34. Update price of a dish")
                 print("35. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
