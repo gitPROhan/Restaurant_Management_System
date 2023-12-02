@@ -44,6 +44,33 @@ def insertCustomer():
 
     return
 
+def AssignMentor(): #UPDATE Query
+    try:
+        row = {}
+        row["Waiter_ID"] = input("Enter Waiter ID of waiter being metored: ")
+        row["Mentor_ID"] = input("Enter Waiter ID of mentee waiter: ")
+        query0="SELECT Waiter_ID FROM WAITER WHERE Waiter_ID='"+row["Waiter_ID"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The waiter with waiter id {row['Waiter_ID']} doesn't exist in database")
+            return
+        query = "UPDATE WAITER SET Mentor_ID='%s' WHERE Waiter_ID='%s'" % (
+            row["Mentor_ID"], row["Waiter_ID"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Database Updated")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to update database")
+        print(">>>>>>>>>>>>>", e)
+
+    return
 
 def insertTable():
     try:
@@ -539,8 +566,20 @@ def updateTableStatus():
         row["Table_num"] = int(
             input("Enter the Table number: "))
         row["new"] = input(
-            "Enter new status for table: ")
-
+            "Enter new status for table(Occupied or Not occupied): ")
+        query0="SELECT Table_Number FROM TABLE_INFO WHERE TABLE_INFO.Table_Number='"+str(row["Table_num"])+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The table with table no {row['Table_num']} doesn't exist in database")
+            returnquery0="SELECT Table_Number FROM TABLE_INFO WHERE TABLE_INFO.Table_Number='"+str(row["Table_num"])+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The table with table no {row['Table_num']} doesn't exist in database")
+            return
         query = "UPDATE TABLE_INFO SET Status='%s' WHERE Table_Number='%d'" % (
             row["new"], row["Table_num"])
 
@@ -819,6 +858,8 @@ def dispatch(ch):
         insertBrings()
     elif(ch==26):
         checkWhoGaveOrderByDate()
+    elif(ch==27):
+        AssignMentor()
     else:
         print("Error: Invalid Option")
 
@@ -838,7 +879,7 @@ while(1):
                               port=3306,
                               user="shreyansh",
                               password="Shreel@1513",
-                              db='restaurant_database2',
+                              db='final_restaurant',
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
 
@@ -896,6 +937,8 @@ while(1):
                     "25. Insert new brings instance")
                 print(
                     "26. Get info that who bought order from whom on particular date")
+                print(
+                    "27. Assign a mentor")
                 print("30. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
