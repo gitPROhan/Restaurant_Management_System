@@ -4,7 +4,7 @@ import pymysql.cursors
 import datetime
 
 
-def insertCustomer():
+def insertCustomer(): #INSERT Query
     try:
         # Takes luggage details as input
         row = {}
@@ -72,7 +72,67 @@ def AssignMentor(): #UPDATE Query
 
     return
 
-def insertTable():
+def ChangeWaiterSalary(): #UPDATE Query
+    try:
+        row = {}
+        row["Waiter_ID"] = input("Enter Waiter ID of waiter: ")
+        row["Salary"] = int(input("Enter new salary: "))
+
+        query0 = "SELECT Waiter_ID FROM WAITER WHERE Waiter_ID='"+row["Waiter_ID"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The waiter with waiter id {row['Waiter_ID']} doesn't exist in database")
+            return
+         
+        query = "UPDATE WAITER SET Salary='%d' WHERE Waiter_ID='%s'" % (
+            row["Salary"], row["Waiter_ID"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Database Updated")
+    
+    except Exception as e:  
+        con.rollback()
+        print("Failed to update database")
+        print(">>>>>>>>>>>>>", e)
+    
+    return
+
+def ChangeChefSalary(): #UPDATE Query
+    try:
+        row = {}
+        row["Chef_ID"] = input("Enter Chef ID of chef: ")
+        row["Salary"] = int(input("Enter new salary: "))
+
+        query0 = "SELECT Chef_ID FROM CHEF WHERE Chef_ID='"+row["Chef_ID"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The chef with chef id {row['Chef_ID']} doesn't exist in database")
+            return
+
+        query = "UPDATE CHEF SET Salary='%d' WHERE Chef_ID='%s'" % (
+            row["Salary"], row["Chef_ID"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Database Updated")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to update database")
+        print(">>>>>>>>>>>>>", e)
+    
+    return
+
+def insertTable():  # INSERT Query
     try:
         # Takes ticket details as input
         row = {}
@@ -98,7 +158,7 @@ def insertTable():
 
     return
 
-def insertCombo():
+def insertCombo():  # INSERT Query
     try:
         # Takes luggage details as input
         row = {}
@@ -164,7 +224,7 @@ def insertCombo():
 
     return
 
-def insertChef():
+def insertChef():   # INSERT Query
     try:
         # Takes driver details as input
         row = {}
@@ -219,7 +279,7 @@ def insertChef():
 
     return
 
-def insertWaiter():
+def insertWaiter(): # INSERT Query
     try:
         # Takes driver details as input
         row = {}
@@ -261,7 +321,7 @@ def insertWaiter():
 
     return
 
-def insertSupplier():
+def insertSupplier():   # INSERT Query
     try:
         # Takes driver details as input
         row = {}
@@ -296,7 +356,7 @@ def insertSupplier():
 
     return
 
-def insertDish():
+def insertDish():   # INSERT Query
     try:
         # Takes driver details as input
         row = {}
@@ -453,8 +513,8 @@ def getDishByKeyword():
         print(">>>>>>>>>>>>>", e)
     return
 
-def getCustomerByLastName():
-    try:
+def getCustomerByLastName():   # SELECT Query
+    try:    
         last_name=input("Give Last name you want to search for:")
         query="SELECT Fname, Mname, Lname, Phone_No FROM CUSTOMER WHERE Lname='"+last_name+"'"
         cur.execute(query)
@@ -482,7 +542,7 @@ def giveTop5dishes_at_feedback():
         print(">>>>>>>>>>>>>", e)
     return
 
-def bestWaiterOftheMonth():
+def bestWaiterOftheMonth():  # SELECT Query
     try:
         query="SELECT A.Fname,A.Mname,A.Lname,A.Waiter_ID,A.Mentor_ID,A.Number_of_tables_served_this_month, A.Rating*A.Number_of_tables_served_this_month as FACTOR FROM WAITER AS A ORDER BY FACTOR DESC LIMIT 1"
         cur.execute(query)
@@ -498,7 +558,7 @@ def bestWaiterOftheMonth():
 
 
     return
-def giveTotalRevenue_month():
+def giveTotalRevenue_month():   # SELECT Query
     try:
         month=input("Give month number (01 for January to 12 for December):")
         flag=input("Give 0 to find for all years or give 1 to find for specific year:")
@@ -531,7 +591,7 @@ def giveTotalRevenue_month():
 
     
 
-def insertIngredients():
+def insertIngredients():    # INSERT Query
     try:
         # Takes driver details as input
         row = {}
@@ -559,7 +619,7 @@ def insertIngredients():
 
     return
 
-def updateTableStatus():
+def updateTableStatus():    # UPDATE Query
     try:
         # Takes updated MOT preference details as input
         row = {}
@@ -573,13 +633,8 @@ def updateTableStatus():
         output0=cur.fetchall()
         if len(output0)==0:
             print(f"The table with table no {row['Table_num']} doesn't exist in database")
-            returnquery0="SELECT Table_Number FROM TABLE_INFO WHERE TABLE_INFO.Table_Number='"+str(row["Table_num"])+"'"
-        cur.execute(query0)
-        con.commit()
-        output0=cur.fetchall()
-        if len(output0)==0:
-            print(f"The table with table no {row['Table_num']} doesn't exist in database")
             return
+        
         query = "UPDATE TABLE_INFO SET Status='%s' WHERE Table_Number='%d'" % (
             row["new"], row["Table_num"])
 
@@ -596,7 +651,7 @@ def updateTableStatus():
 
     return
 
-def insertNewOrder():
+def insertNewOrder():   # INSERT Query
     try:
         row={}
         row["Dt"]=input("Give date:")
@@ -648,7 +703,7 @@ def insertNewOrder():
 
     return
 
-def updateCustomer_Table_BusinessProvided():
+def updateCustomer_Table_BusinessProvided():    # UPDATE Query
     try:
         row = {}
         row["Table_num"]=int(input("Give new table number:"))
@@ -693,7 +748,7 @@ def updateCustomer_Table_BusinessProvided():
     return
 
 
-def fireChef():
+def fireChef():  # DELETE Query
     try:
         row = {}
         row["Chef_ID"] = input("Chef ID: ")
@@ -715,7 +770,7 @@ def fireChef():
     return
 
 
-def findEmptyTable():
+def findEmptyTable():   # SELECT Query
     try:
         # Takes ticket details as input
         row = {}
@@ -860,6 +915,10 @@ def dispatch(ch):
         checkWhoGaveOrderByDate()
     elif(ch==27):
         AssignMentor()
+    elif(ch==28):
+        ChangeWaiterSalary()
+    elif(ch==29):
+        ChangeChefSalary()
     else:
         print("Error: Invalid Option")
 
@@ -877,9 +936,9 @@ while(1):
         # Set host to the server's address if you don't want to use local SQL server
         con = pymysql.connect(host='localhost',
                               port=3306,
-                              user="shreyansh",
-                              password="Shreel@1513",
-                              db='final_restaurant',
+                              user="root",
+                              password="0512",
+                              db='restaurant_database',
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
 
@@ -938,11 +997,15 @@ while(1):
                 print(
                     "26. Get info that who bought order from whom on particular date")
                 print(
-                    "27. Assign a mentor")
-                print("30. Logout")
+                    "27. Assign a mentor to a waiter")
+                print(
+                    "28. Change salary of a waiter")
+                print(
+                    "29. Change salary of a chef")
+                print("35. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
-                if ch == 30:
+                if ch == 35:
                     exit()
                 else:
                     dispatch(ch)
