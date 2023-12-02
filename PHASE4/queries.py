@@ -1105,7 +1105,7 @@ while(1):
                     "31. Remove supplier from database")
                 print(
                     "32. Give dishes with keyword in name")
-                print("32. Logout")
+                print("33. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
                 if ch == 35:
