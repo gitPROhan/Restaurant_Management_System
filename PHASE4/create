@@ -1,7 +1,7 @@
 CREATE TABLE CUSTOMER (
-  Fname VARCHAR(255),
-  Mname VARCHAR(255),
-  Lname VARCHAR(255),
+  Fname VARCHAR(25),
+  Mname VARCHAR(25),
+  Lname VARCHAR(25),
   Phone_No CHAR(10) PRIMARY KEY,
   Business_provided_till_now INTEGER,
   Birthday DATE,
@@ -11,34 +11,35 @@ CREATE TABLE CUSTOMER (
 
 CREATE TABLE CHEF (
   Chef_ID CHAR(6) PRIMARY KEY,
-  Fname VARCHAR(255),
-  Mname VARCHAR(255),
-  Lname VARCHAR(255),
+  Fname VARCHAR(25),
+  Mname VARCHAR(25),
+  Lname VARCHAR(25),
   Date_of_join DATE,
-  Rating INTEGER,
+  Rating INTEGER CHECK (Rating >= 1 AND Rating <= 5),
   Salary INTEGER
 );
 
 
 CREATE TABLE CHEF_SPECIALISATION (
   Chef_ID CHAR(6),
-  Dish_name VARCHAR(255),
+  Dish_name VARCHAR(25),
   PRIMARY KEY (Chef_ID, Dish_name)
 );
 
 CREATE TABLE CHEF_SHIFT (
-  Chef_ID CHAR(6) PRIMARY KEY,
+  Chef_ID CHAR(6),
   Shift_Start_time TIME,
-  Shift_end_time TIME
+  Shift_end_time TIME,
+  PRIMARY KEY (Chef_ID, Shift_Start_time,Shift_end_time)
 );
 
 CREATE TABLE WAITER (
-  Fname VARCHAR(255),
-  Mname VARCHAR(255),
-  Lname VARCHAR(255),
+  Fname VARCHAR(25),
+  Mname VARCHAR(25),
+  Lname VARCHAR(25),
   Waiter_ID CHAR(6) PRIMARY KEY,
   Date_of_join DATE,
-  Rating INTEGER,
+  Rating INTEGER CHECK (Rating BETWEEN 1 AND 5),
   Number_of_tables_served_this_month INTEGER,
   Salary INTEGER,
   Mentor_ID CHAR(6)
@@ -46,9 +47,10 @@ CREATE TABLE WAITER (
 
 
 CREATE TABLE WAITER_SHIFT (
-  Waiter_ID CHAR(6) PRIMARY KEY,
+  Waiter_ID CHAR(6),
   Shift_Start_time TIME,
-  Shift_end_time TIME
+  Shift_end_time TIME,
+  PRIMARY KEY(Waiter_ID,Shift_Start_time,Shift_end_time)
 );
 
 
@@ -61,7 +63,7 @@ CREATE TABLE TABLE_INFO (
 
 
 CREATE TABLE DISH (
-  Name VARCHAR(255) PRIMARY KEY,
+  Name VARCHAR(25) PRIMARY KEY,
   Category ENUM ('Veg', 'Non-veg', 'Vegan'),
   Cuisine ENUM ('Indian', 'Italian', 'Chinese'),
   Description VARCHAR(255),
@@ -69,16 +71,16 @@ CREATE TABLE DISH (
 );
 
 CREATE TABLE DISH_REQUIREMENT (
-  Dish_Name varchar(255),
-  Ingredient varchar(255),
+  Dish_Name varchar(25),
+  Ingredient varchar(25),
   PRIMARY KEY(Dish_Name,Ingredient)
 );
 
 CREATE Table INGREDIENT (
-  Name VARCHAR(255),
+  Name VARCHAR(25),
   Quantity_in_hand INTEGER,
   Supplier_ID CHAR(6),
-  PRIMARY KEY(NAME)
+  PRIMARY KEY(Name)
 );
 
 
@@ -88,52 +90,51 @@ CREATE TABLE ORDER_INFO (
   Time TIME,
   Total_price INTEGER,
   Customer_Phone_No CHAR(10),
-  Rating INTEGER,
+  Rating INTEGER CHECK (Rating BETWEEN 1 AND 10),
   Comment VARCHAR(255),
-  PRIMARY KEY (Order_Number, Customer_Phone_No)
+  PRIMARY KEY (Order_Number, Customer_Phone_No, Date)
 );
 
 CREATE TABLE ORDER_DISHES (
   Order_Number INTEGER,
   Date TIME,
   Customer_Phone_No CHAR(10),
-  Dish_name VARCHAR(255),
+  Dish_name VARCHAR(25),
   PRIMARY KEY (Order_Number, Date, Customer_Phone_No, Dish_name)
 );
 
 
 CREATE TABLE SUPPLIER (
   Supplier_ID CHAR(6) PRIMARY KEY,
-  Fname VARCHAR(255),
-  Mname VARCHAR(255),
-  Lname VARCHAR(255),
-  House_No VARCHAR(255),
-  Street VARCHAR(255),
-  Pincode INTEGER,
+  Fname VARCHAR(25),
+  Mname VARCHAR(25),
+  Lname VARCHAR(25),
+  House_No VARCHAR(25),
+  Street VARCHAR(127),
+  Pincode INT CHECK (Pincode >= 110001 AND Pincode <= 858434),
   Phone_No CHAR(10),
   Transaction_Amount INTEGER
 );
 
 CREATE TABLE SUPPLIER_PIN (
-  Supplier_ID CHAR(6) PRIMARY KEY,
-  Pincode CHAR(6),
+  Pincode INT CHECK (Pincode BETWEEN 110001 AND 858434) PRIMARY KEY,
   City VARCHAR(255)
 );
 
 
 CREATE TABLE COMBO (
-  Name VARCHAR(255),
-  Dish_Name VARCHAR(255),
+  Name VARCHAR(25),
+  Dish_Name VARCHAR(25),
   Price INTEGER,
   Availability BOOLEAN,
   PRIMARY KEY (Name, Dish_Name)
 );
 
 CREATE TABLE COMBO_TYPE (
-  Name VARCHAR(255),
-  Dish_Name VARCHAR(255),
+  Name VARCHAR(25),
+  Dish_Name VARCHAR(25),
   Type VARCHAR(255),
-  PRIMARY KEY (Name, Dish_Name)
+  PRIMARY KEY (Name, Dish_Name, Type)
 );
 
 
@@ -174,11 +175,6 @@ ALTER TABLE CUSTOMER
 ADD CONSTRAINT fk_customer_table
 FOREIGN KEY (Table_Number) REFERENCES TABLE_INFO(Table_Number);
 
-ALTER TABLE ORDER_INFO DROP PRIMARY KEY;
-
-ALTER TABLE ORDER_INFO ADD PRIMARY KEY(Customer_Phone_No, Order_Number,Date);
-
-ALTER TABLE GIVES ADD CONSTRAINT fk_gives_orderinfo1 FOREIGN KEY(Phone_no, Order_Number,Date) REFERENCES ORDER_INFO(Customer_Phone_No, Order_Number,Date);
 ALTER TABLE GIVES ADD CONSTRAINT fk_gives_waiter FOREIGN KEY(Waiter_ID) REFERENCES WAITER(Waiter_ID);
 ALTER TABLE ORDER_INFO ADD CONSTRAINT fk_orderinfo_customer FOREIGN KEY(Customer_Phone_No) REFERENCES CUSTOMER(Phone_no);
 ALTER TABLE BRINGS ADD CONSTRAINT fk_brings_waiter FOREIGN KEY(Waiter_ID) REFERENCES WAITER(Waiter_ID);
@@ -197,5 +193,5 @@ ALTER TABLE INGREDIENT ADD CONSTRAINT fk_ing_sup FOREIGN KEY(Supplier_ID) REFERE
 ALTER TABLE CHEF_SPECIALISATION ADD CONSTRAINT fk_chefspec_dish FOREIGN KEY(Dish_name) REFERENCES DISH(Name);
 ALTER TABLE ORDER_DISHES ADD CONSTRAINT fk_orderdishes_dish FOREIGN KEY(Dish_name) REFERENCES DISH(Name);
 ALTER TABLE WAITER ADD CONSTRAINT fk_waiter_waiterment FOREIGN KEY(Mentor_ID) REFERENCES WAITER(Waiter_ID);
-ALTER TABLE SUPPLIER_PIN ADD CONSTRAINT fk_suppin_sup FOREIGN KEY(Supplier_ID) REFERENCES SUPPLIER(Supplier_ID);
-
+ALTER TABLE GIVES ADD CONSTRAINT fk_gives_orderinfo1 FOREIGN KEY(Phone_no, Order_Number,Date) REFERENCES ORDER_INFO(Customer_Phone_No, Order_Number,Date);
+ALTER TABLE SUPPLIER ADD CONSTRAINT fk_pin_pin FOREIGN KEY(Pincode) REFERENCES SUPPLIER_PIN(Pincode);

@@ -77,6 +77,17 @@ VALUES
   ('Family Special', 'Paneer Butter Masala', 50, 1),
   ('Family Special', 'Vegetable Biryani', 50, 1);
 
+INSERT INTO SUPPLIER_PIN (Pincode, City)
+VALUES
+  ('110001', 'Delhi'),
+  ('560001', 'Bangalore'),
+  ('500032', 'Hyderabad'),
+  ('400001', 'Mumbai'),
+  ('110024', 'Delhi'),
+  ('411014', 'Pune'),
+  ('560034', 'Bangalore'),
+  ('400050', 'Mumbai');
+
 INSERT INTO SUPPLIER (Supplier_ID, Fname, Mname, Lname, House_No, Street, Pincode, Phone_No, Transaction_Amount)
 VALUES
   ('SUP001', 'Ramesh', 'Kumar', 'Agarwal', '12', 'Main Road', 110001, '9876543210', 5000),
@@ -206,16 +217,6 @@ VALUES
   ('W009', 4, '9876543210', '2023-11-26', 'C004', 4),
   ('W010', 5, '9998887777', '2023-11-27', 'C005', 5);
 
-INSERT INTO SUPPLIER_PIN (Supplier_ID, Pincode, City)
-VALUES
-  ('SUP001', '110001', 'Delhi'),
-  ('SUP002', '560001', 'Bangalore'),
-  ('SUP005', '500032', 'Hyderabad'),
-  ('SUP006', '400001', 'Mumbai'),
-  ('SUP007', '110024', 'Delhi'),
-  ('SUP010', '411014', 'Pune'),
-  ('SUP011', '560034', 'Bangalore'),
-  ('SUP012', '400050', 'Mumbai');
 
 SELECT table_name, table_rows
 FROM information_schema.tables
