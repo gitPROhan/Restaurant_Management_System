@@ -835,24 +835,24 @@ def insertGives():
 
 
 
-def removeCustomer():
-    try:
-        row = {}
-        row["Phone_No"] = input("Customer Phone Number: ")
+# def removeCustomer():
+#     try:
+#         row = {}
+#         row["Phone_No"] = input("Customer Phone Number: ")
 
-        query = "DELETE FROM CUSTOMER WHERE Phone_No='%s'" % (row["Phone_No"])
+#         query = "DELETE FROM CUSTOMER WHERE Phone_No='%s'" % (row["Phone_No"])
 
-        print(query)
-        cur.execute(query)
-        con.commit()
+#         print(query)
+#         cur.execute(query)
+#         con.commit()
 
-        print("Customer Removed Successfully")
+#         print("Customer Removed Successfully")
 
-    except Exception as e:
-        con.rollback()
-        print("Failed to delete customer from database")
-        print(">>>>>>>>>>>>",e)
-    return
+#     except Exception as e:
+#         con.rollback()
+#         print("Failed to delete customer from database")
+#         print(">>>>>>>>>>>>",e)
+#     return
 
 def FireWaiter():
     try:
@@ -873,31 +873,31 @@ def FireWaiter():
         print(">>>>>>>>>>>>",e)
     return
 
-def removeDish():
-    try:
-        row = {}
-        row["Name"] = input("Dish Name: ")
+# def removeDish():
+#     try:
+#         row = {}
+#         row["Name"] = input("Dish Name: ")
 
-        query = "DELETE FROM DISH WHERE Name='%s'" % (row["Name"])
+#         query = "DELETE FROM DISH WHERE Name='%s'" % (row["Name"])
 
-        print(query)
-        cur.execute(query)
-        con.commit()
+#         print(query)
+#         cur.execute(query)
+#         con.commit()
 
-        print("Dish Removed Successfully")
+#         print("Dish Removed Successfully")
 
-    except Exception as e:
-        con.rollback()
-        print("Failed to Dish from database")
-        print(">>>>>>>>>>>>",e)
-    return
+#     except Exception as e:
+#         con.rollback()
+#         print("Failed to Dish from database")
+#         print(">>>>>>>>>>>>",e)
+#     return
 
 def removeSupplier():
     try:
         row = {}
         row["Supplier_ID"] = input("Supplier ID: ")
         
-        query = "DELETE FROM SUPPLIER WHERE Order_Number='%s' AND Date='%s' AND Customer_Phone_No='%s'" % (row["Order_Number"],row["Date"],row["Customer_Phone_No"])
+        query = "DELETE FROM SUPPLIER WHERE Supplier_ID='%s'" % (row["Supplier_ID"])
 
         print(query)
         cur.execute(query)
@@ -997,12 +997,8 @@ def dispatch(ch):
     elif(ch==29):
         ChangeChefSalary()
     elif(ch==30):
-        removeCustomer()
-    elif(ch==31):
         FireWaiter()
-    elif(ch==32):
-        removeDish()
-    elif(ch==33):
+    elif(ch==31):
         removeSupplier()
     else:
         print("Error: Invalid Option")
@@ -1088,14 +1084,10 @@ while(1):
                 print(
                     "29. Change salary of a chef")
                 print(
-                    "30. Remove customer from database")
+                    "30. Remove waiter from database")
                 print(
-                    "31. Remove waiter from database")
-                print(
-                    "32. Remove dish from database")
-                print(
-                    "33. Remove supplier from database")
-                print("35. Logout")
+                    "31. Remove supplier from database")
+                print("32. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
                 if ch == 35:
