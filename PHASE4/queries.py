@@ -416,7 +416,7 @@ def allOrdersOfaCustomers():
         con.commit()
         output = cur.fetchall()
         for x in output:
-            print(f"Order_num :{x['Order_Number']}  Dishes :",end='')
+            print(f"\nOrder_num :{x['Order_Number']}  Date:{x['Date']}  Time:{x['Time']}  Total Price:{x['Total_price']}  Phone No:{x['Customer_Phone_No']}  Rating:{x['Rating']}  Comment:{x['Comment']}  Dishes :",end='')
             query2="SELECT Dish_name FROM (ORDER_INFO INNER JOIN ORDER_DISHES ON ORDER_INFO.Order_Number=ORDER_DISHES.Order_Number) WHERE ORDER_INFO.Order_Number='"+str(x["Order_Number"])+"'"
             cur.execute(query2)
             con.commit()
@@ -434,13 +434,13 @@ def allOrdersOfaCustomers():
 
 def allDishesOfCategory():
     try:
-        category=input("Give category of dishes you want to search:")
-        query="SELECT Name FROM DISH WHERE Category='"+category+"'"
+        category=input("Give category of dishes you want to search(Vegan or Veg or Non-veg):")
+        query="SELECT Name,Category,Cuisine,Description,Price FROM DISH WHERE Category='"+category+"'"
         cur.execute(query)
         con.commit()
         output=cur.fetchall()
         for x in output:
-            print(x["Name"])
+            print(f"\nName:{x['Name']}  Category:{x['Category']}  Cuisine:{x['Cuisine']}  Description:{x['Description']}  Price:{x['Price']}\n")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
@@ -521,14 +521,14 @@ def getCustomerByLastName():   # SELECT Query
         con.commit()
         output = cur.fetchall()
         for x in output:
-            print(f"Name: {x['Fname']} {x['Mname']} {x['Lname']}  ,  Phone Number:{x['Phone_No']}")
+            print(f"\nName: {x['Fname']} {x['Mname']} {x['Lname']}    Phone Number:{x['Phone_No']}\n")
     except Exception as e:
         con.rollback()
         print("Failed to retrieve from database")
         print(">>>>>>>>>>>>>", e)
     return
 
-def giveTop5dishes_at_feedback():
+def giveTop5dishes_ac_to_feedback():
     try:
         query="SELECT Dish_name, AVG(Rating) AS AVERAGE_RATING FROM (ORDER_INFO INNER JOIN ORDER_DISHES ON ORDER_INFO.Order_Number=ORDER_DISHES.Order_Number) GROUP BY Dish_name ORDER BY AVERAGE_RATING DESC LIMIT 5"
         cur.execute(query)
@@ -776,7 +776,7 @@ def findEmptyTable():   # SELECT Query
         row = {}
         
 
-        query = "SELECT TABLE_INFO.Table_Number FROM TABLE_INFO WHERE TABLE_INFO.Status='Not occupied'"
+        query = "SELECT TABLE_INFO.Table_Number as tn , Section_Type FROM TABLE_INFO WHERE TABLE_INFO.Status='Not occupied'"
 
         print(query)
         cur.execute(query)
@@ -784,7 +784,7 @@ def findEmptyTable():   # SELECT Query
 
         output = cur.fetchall()
         for x in output:
-            print(x)
+            print(f"\nTable No:{x['tn']}  Section Type:{x['Section_Type']}\n")
 
         print("Retrieved From Database")
 
@@ -931,7 +931,21 @@ def checkWhoGaveOrderByDate():
     return
 
 
-
+def checkDishWithKeywordInName():
+    try:
+        row={}
+        row["nm"]=input("Give keyword you want to search in name:")
+        query="SELECT Name,Cuisine,Price FROM DISH WHERE Name LIKE '%"+row["nm"]+"%'"
+        cur.execute(query)
+        con.commit()
+        output=cur.fetchall()
+        for x in output:
+            print(f"\nName:{x['Name']}  Cuisine:{x['Cuisine']}  Price:{x['Price']}\n")
+    except Exception as e:
+        con.rollback()
+        print("Failed to retrieve from database")
+        print(">>>>>>>>>>>>>", e)
+    return
 
 def dispatch(ch):
     """
@@ -1000,6 +1014,8 @@ def dispatch(ch):
         FireWaiter()
     elif(ch==31):
         removeSupplier()
+    elif(ch==32):
+        checkDishWithKeywordInName()
     else:
         print("Error: Invalid Option")
 
@@ -1017,9 +1033,9 @@ while(1):
         # Set host to the server's address if you don't want to use local SQL server
         con = pymysql.connect(host='localhost',
                               port=3306,
-                              user='jayesh',
-                              password='192837',
-                              db='Restaurant_DBMS',
+                              user='shreyansh',
+                              password='Shreel@1513',
+                              db='final_restaurant',
                               cursorclass=pymysql.cursors.DictCursor)
         tmp = sp.call('clear', shell=True)
 
@@ -1052,7 +1068,7 @@ while(1):
                     "12. Get the name of Dish with highest sale")
                 print(
                     "13. All orders of a customer")
-                print("14. All dishes or a particular category")
+                print("14. All dishes of a particular category")
                 print(
                     "15. Get total salary being given to all Chefs")
                 print(
@@ -1087,6 +1103,8 @@ while(1):
                     "30. Remove waiter from database")
                 print(
                     "31. Remove supplier from database")
+                print(
+                    "32. Give dishes with keyword in name")
                 print("32. Logout")
                 ch = int(input("Enter choice> "))
                 tmp = sp.call('clear', shell=True)
