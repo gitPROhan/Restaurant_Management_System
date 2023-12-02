@@ -835,6 +835,85 @@ def insertGives():
 
 
 
+def removeCustomer():
+    try:
+        row = {}
+        row["Phone_No"] = input("Customer Phone Number: ")
+
+        query = "DELETE FROM CUSTOMER WHERE Phone_No='%s'" % (row["Phone_No"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Customer Removed Successfully")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to delete customer from database")
+        print(">>>>>>>>>>>>",e)
+    return
+
+def FireWaiter():
+    try:
+        row = {}
+        row["Waiter_ID"] = input("Waiter ID: ")
+
+        query = "DELETE FROM WAITER WHERE Waiter_ID='%s'" % (row["Waiter_ID"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Waiter Removed Successfully")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to delete Waiter from database")
+        print(">>>>>>>>>>>>",e)
+    return
+
+def removeOrder():
+    try:
+        row = {}
+        row["Order_Number"] = input("Order Number: ")
+        row["Date"] = input("Date: ")
+        row["Customer_Phone_No"] = input("Customer Phone Number: ")
+
+        query = "DELETE FROM ORDER_INFO WHERE Order_Number='%s' AND Date='%s' AND Customer_Phone_No='%s'" % (row["Order_Number"],row["Date"],row["Customer_Phone_No"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Order Removed Successfully")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to delete Order from database")
+        print(">>>>>>>>>>>>",e)
+    return
+
+def removeSupplier():
+    try:
+        row = {}
+        row["Supplier_ID"] = input("Supplier ID: ")
+        
+        query = "DELETE FROM SUPPLIER WHERE Order_Number='%s' AND Date='%s' AND Customer_Phone_No='%s'" % (row["Order_Number"],row["Date"],row["Customer_Phone_No"])
+
+        print(query)
+        cur.execute(query)
+        con.commit()
+
+        print("Supplier Removed Successfully")
+
+    except Exception as e:
+        con.rollback()
+        print("Failed to delete Supplier from database")
+        print(">>>>>>>>>>>>",e)
+    return
+
+
 
 def checkWhoGaveOrderByDate():
     try:
@@ -919,6 +998,14 @@ def dispatch(ch):
         ChangeWaiterSalary()
     elif(ch==29):
         ChangeChefSalary()
+    elif(ch==30):
+        removeCustomer()
+    elif(ch==31):
+        FireWaiter()
+    elif(ch==32):
+        removeOrder()
+    elif(ch==33):
+        removeSupplier()
     else:
         print("Error: Invalid Option")
 

@@ -1,3 +1,5 @@
+
+
 CREATE TABLE CUSTOMER (
   Fname VARCHAR(25),
   Mname VARCHAR(25),
