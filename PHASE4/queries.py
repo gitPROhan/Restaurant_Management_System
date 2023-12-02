@@ -752,7 +752,13 @@ def fireChef():  # DELETE Query
     try:
         row = {}
         row["Chef_ID"] = input("Chef ID: ")
-
+        query0="SELECT Chef_ID FROM CHEF WHERE CHEF.Chef_ID='"+row["Chef_ID"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The chef with chef id {row['Chef_ID']} doesn't exist in database")
+            return
         query = "DELETE FROM CHEF WHERE Chef_ID='%s'" % (
             row["Chef_ID"])
  
@@ -858,7 +864,13 @@ def FireWaiter():
     try:
         row = {}
         row["Waiter_ID"] = input("Waiter ID: ")
-
+        query0="SELECT Waiter_ID FROM WAITER WHERE WAITER.Waiter_ID='"+row["Waiter_ID"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The waiter with waiter id {row['Waiter_ID']} doesn't exist in database")
+            return
         query = "DELETE FROM WAITER WHERE Waiter_ID='%s'" % (row["Waiter_ID"])
 
         print(query)
@@ -877,7 +889,13 @@ def removeDish():
     try:
         row = {}
         row["Name"] = input("Dish Name: ")
-
+        query0="SELECT Name FROM DISH WHERE DISH.Name='"+row["nm"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The table with table no {row['Table_num']} doesn't exist in database")
+            return
         query = "DELETE FROM DISH WHERE Name='%s'" % (row["Name"])
 
         print(query)
@@ -896,7 +914,13 @@ def removeSupplier():
     try:
         row = {}
         row["Supplier_ID"] = input("Supplier ID: ")
-        
+        query0="SELECT Supplier_ID FROM SUPPLIER WHERE SUPPLIER.Supplier_ID='"+row["Supplier_ID"]+"'"
+        cur.execute(query0)
+        con.commit()
+        output0=cur.fetchall()
+        if len(output0)==0:
+            print(f"The supplier with supplier_id :{row['Supplier_ID']} doesn't exist in database")
+            return
         query = "DELETE FROM SUPPLIER WHERE Supplier_ID='%s'" % (row["Supplier_ID"])
 
         print(query)
